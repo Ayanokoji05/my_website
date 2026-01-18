@@ -50,8 +50,8 @@ const Contact = () => {
     {
       icon: Mail,
       label: 'Email',
-      value: 'your.email@example.com',
-      link: 'mailto:your.email@example.com',
+      value: 'pratushkumarpusti@gmail.com',
+      link: 'mailto:pratushkumarpusti@gmail.com',
     },
     {
       icon: Phone,
@@ -61,9 +61,9 @@ const Contact = () => {
     },
     {
       icon: MapPin,
-      label: 'Location',
-      value: 'Your City, Country',
-      link: null,
+      label: 'NISER, Bhubaneswar',
+      value: 'Bhubaneswar, India',
+      link: 'https://maps.app.goo.gl/n5DquCTKi7Ur2JCa9',
     },
   ];
 

@@ -4,8 +4,8 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const socialLinks = [
-    { icon: Github, href: 'https://github.com/yourusername', label: 'GitHub' },
-    { icon: Linkedin, href: 'https://linkedin.com/in/yourusername', label: 'LinkedIn' },
+    { icon: Github, href: 'https://github.com/Ayanokoji05', label: 'GitHub' },
+    { icon: Linkedin, href: 'https://www.linkedin.com/in/pratush-kumar-pusti-68992b2b9', label: 'LinkedIn' },
     { icon: Twitter, href: 'https://twitter.com/yourusername', label: 'Twitter' },
     { icon: Mail, href: 'mailto:your.email@example.com', label: 'Email' },
   ];
@@ -75,7 +75,7 @@ const Footer = () => {
         {/* Copyright */}
         <div className="mt-8 pt-8 border-t border-gray-800 text-center">
           <p className="text-gray-400 text-sm">
-            © {currentYear} Your Name. All rights reserved.
+            © {currentYear} Pratush Kumar Pusti. All rights reserved.
           </p>
         </div>
       </div>

@@ -2,45 +2,27 @@ import { Download, Award, Briefcase, GraduationCap } from 'lucide-react';
 
 const About = () => {
   const skills = [
-    { category: 'Programming', items: ['Python', 'R', 'JavaScript', 'SQL'] },
+    { category: 'Programming', items: ['Python', 'R', 'SQL'] },
     { category: 'Data Analysis', items: ['Pandas', 'NumPy', 'Scikit-learn', 'TensorFlow'] },
     { category: 'Bioinformatics', items: ['BioPython', 'Genomics', 'RNA-Seq', 'BLAST'] },
-    { category: 'Tools', items: ['Git', 'Docker', 'Linux', 'Jupyter'] },
+    { category: 'Tools', items: ['Git', 'Linux', 'Jupyter'] },
   ];
 
   const education = [
     {
-      degree: 'Ph.D. in Bioinformatics',
-      institution: 'Your University',
-      year: '2020 - Present',
-      description: 'Focus on computational genomics and machine learning applications in biology',
-    },
-    {
-      degree: 'M.Sc. in Computational Biology',
-      institution: 'Your University',
-      year: '2018 - 2020',
-      description: 'Specialized in data analysis and statistical modeling',
-    },
-    {
-      degree: 'B.Sc. in Biology',
-      institution: 'Your University',
-      year: '2014 - 2018',
-      description: 'Major in Molecular Biology with honors',
+      degree: 'Int. M.Sc. in Life Sciences',
+      institution: 'NISER, Bhubaneswar',
+      year: '2023 - present',
+      description: '',
     },
   ];
 
   const experience = [
     {
-      position: 'Research Assistant',
-      organization: 'Research Lab Name',
-      period: '2021 - Present',
-      description: 'Leading computational analysis of large-scale genomic datasets',
-    },
-    {
-      position: 'Data Science Intern',
-      organization: 'Company Name',
-      period: '2020 - 2021',
-      description: 'Developed machine learning models for biological data analysis',
+      position: 'Summer Intern',
+      organization: 'IISER Bhopal',
+      period: 'May 2024 - July 2024',
+      description: 'Worked with various bioinformatics tools to analyze sequencing data',
     },
   ];
 
@@ -51,7 +33,7 @@ const About = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">About Me</h1>
           <p className="text-xl text-primary-100">
-            Researcher, Data Scientist, and Lifelong Learner
+            Researcher, Aspiring Data Scientist, and Lifelong Learner
           </p>
         </div>
       </section>
@@ -81,7 +63,7 @@ const About = () => {
             {/* CV Download Button */}
             <div className="mt-8">
               <a
-                href="/path-to-your-cv.pdf"
+                href="/assets/pratush_cv-2.pdf"
                 download
                 className="btn-primary inline-flex items-center"
               >

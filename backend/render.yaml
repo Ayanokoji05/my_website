@@ -1,0 +1,15 @@
+services:
+  # Backend Web Service
+  - type: web
+    name: academic-portfolio-api
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11
+      - key: DATABASE_URL
+        value: sqlite:///./portfolio.db
+      - key: ALLOWED_ORIGINS
+        sync: false
+    healthCheckPath: /api/health
