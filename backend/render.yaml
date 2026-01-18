@@ -11,5 +11,5 @@ services:
       - key: DATABASE_URL
         value: sqlite:///./portfolio.db
       - key: ALLOWED_ORIGINS
-        sync: false
+        value: https://academic-portfolio-lyart.vercel.app,http://localhost:3000
     healthCheckPath: /api/health
