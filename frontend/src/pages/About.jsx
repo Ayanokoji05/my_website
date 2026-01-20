@@ -22,7 +22,7 @@ const About = () => {
       position: 'Summer Intern',
       organization: 'IISER Bhopal',
       period: 'May 2024 - July 2024',
-      description: 'Worked with various bioinformatics tools to analyze sequencing data',
+      description: 'Built scalable bioinformatics pipelines for large-scale CDS retrieval (~500 species), alignment (GUIDANCE2), phylogenetic analysis, and automated LaTeX reporting using Bash, R, and Biopython.',
     },
   ];
 
