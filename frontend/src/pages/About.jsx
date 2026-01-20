@@ -13,7 +13,13 @@ const About = () => {
       degree: 'Int. M.Sc. in Life Sciences',
       institution: 'NISER, Bhubaneswar',
       year: '2023 - present',
-      description: '',
+      description: 'Coursework: Molecular Biology, Genetics, Biochemistry, Animal Physiology, Microbiology, Plant Physiology, Cell Biology, Ecology, Evolutionary Biology',
+    },
+    {
+      degree: 'Senior Secondary Schooling',
+      institution: 'Air Force School, Hindan',
+      year: '2021 - 2023',
+      description: 'Coursework: PCB (Physics, Chemistry, Biology)',
     },
   ];
 
