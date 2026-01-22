@@ -3,7 +3,7 @@ import { Download, Award, Briefcase, GraduationCap } from 'lucide-react';
 const About = () => {
   const skills = [
     { category: 'Programming', items: ['Python', 'R', 'SQL'] },
-    { category: 'Data Analysis', items: ['Pandas', 'NumPy', 'Scikit-learn', 'TensorFlow'] },
+    { category: 'Data Analysis', items: ['Pandas', 'NumPy', 'Matplotlib'] },
     { category: 'Bioinformatics', items: ['BioPython', 'Genomics', 'RNA-Seq', 'BLAST'] },
     { category: 'Tools', items: ['Git', 'Linux', 'Jupyter'] },
   ];
@@ -13,6 +13,7 @@ const About = () => {
       degree: 'Int. M.Sc. in Life Sciences',
       institution: 'NISER, Bhubaneswar',
       year: '2023 - present',
+      scholarship: 'DISHA Fellowship',
       description: 'Coursework: Molecular Biology, Genetics, Biochemistry, Animal Physiology, Microbiology, Plant Physiology, Cell Biology, Ecology, Evolutionary Biology',
     },
     {
@@ -51,18 +52,17 @@ const About = () => {
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Biography</h2>
             <div className="prose prose-lg max-w-none text-gray-600 space-y-4">
               <p>
-                I'm a passionate researcher specializing in bioinformatics and computational biology. 
-                My work focuses on using data science and machine learning techniques to understand 
-                complex biological systems.
+                I'm a passionate researcher specializing in life sciences and computational biology. 
+                I'm currently pursuing my Master's in Life Sciences at NISER, Bhubaneswar, India.
               </p>
               <p>
                 With a strong background in both biology and computer science, I bridge the gap 
-                between wet lab experiments and computational analysis. My research aims to uncover 
+                between wet lab experiments and computational analysis. I aspire to uncover 
                 novel insights from large-scale genomic and proteomic datasets.
               </p>
               <p>
                 When I'm not analyzing data or writing code, you can find me reading scientific 
-                papers, attending conferences, or contributing to open-source bioinformatics projects.
+                papers or attending conferences.
               </p>
             </div>
 

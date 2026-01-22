@@ -6,7 +6,7 @@ const Home = () => {
     {
       icon: Code,
       title: 'Research Projects',
-      description: 'Cutting-edge research in bioinformatics and data analysis',
+      description: 'Active research in Life sciences',
       link: '/research',
     },
     {
@@ -35,12 +35,11 @@ const Home = () => {
                 Hi, I'm <span className="text-primary-200">Pratush Kumar Pusti</span>
               </h1>
               <p className="text-xl md:text-2xl text-primary-100 mb-8">
-                Researcher | Data Scientist | Academic
+                Researcher | Academic
               </p>
               <p className="text-lg text-primary-50 mb-8 leading-relaxed">
-                I'm passionate about using computational methods to solve biological problems. 
-                My research focuses on [your specific area], combining biology and data science 
-                to uncover new insights.
+                I'm proficient in wet lab techniques in the field of Molecular biology, Genetics, Cell Biology and Immunology.
+                I also have strong computational skills in Data Science and Bioinformatics enabling me to analyze complex biological data and derive meaningful insights.
               </p>
               <div className="flex flex-wrap gap-4">
                 <Link to="/research" className="btn-primary bg-white text-primary-600 hover:bg-primary-50">
@@ -79,7 +78,7 @@ const Home = () => {
               What I Do
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Exploring the intersection of biology and computation
+              Interested in molecular systems biology and immunology. With a growing passion for data science and neurology.
             </p>
           </div>
 

@@ -7,7 +7,7 @@ const Footer = () => {
     { icon: Github, href: 'https://github.com/Ayanokoji05', label: 'GitHub' },
     { icon: Linkedin, href: 'https://www.linkedin.com/in/pratush-kumar-pusti-68992b2b9', label: 'LinkedIn' },
     { icon: Twitter, href: 'https://twitter.com/yourusername', label: 'Twitter' },
-    { icon: Mail, href: 'mailto:your.email@example.com', label: 'Email' },
+    { icon: Mail, href: 'mailto:pratushkumarpusti@gmail.com', label: 'Email' },
   ];
 
   return (
@@ -18,7 +18,7 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">About</h3>
             <p className="text-gray-400 text-sm">
-              Academic researcher passionate about bioinformatics. Sharing insights through research, publications, and blog posts.
+              Academic researcher passionate about Molecular Systems Biology, Immunology and Data Science. Sharing insights through research, publications, and blog posts.
             </p>
           </div>
 
