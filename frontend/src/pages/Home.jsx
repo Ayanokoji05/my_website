@@ -56,7 +56,7 @@ const Home = () => {
               <div className="relative">
                 <div className="w-64 h-64 md:w-80 md:h-80 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 p-2">
                   <img
-                    src="WhatsApp Image 2026-01-22 at 12.23.23.jpeg"
+                    src="/assets/WhatsApp Image 2026-01-22 at 12.23.23.jpeg"
                     alt="Pratush Kumar Pusti"
                     className="w-full h-full rounded-full object-cover border-4 border-white"
                   />
