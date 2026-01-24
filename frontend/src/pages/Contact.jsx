@@ -62,7 +62,7 @@ const Contact = () => {
     {
       icon: MapPin,
       label: 'NISER, Bhubaneswar',
-      value: 'Bhubaneswar, India',
+      value: 'Odisha, India',
       link: 'https://maps.app.goo.gl/n5DquCTKi7Ur2JCa9',
     },
   ];
