@@ -8,3 +8,30 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Database files (VERY IMPORTANT!)
+*.db
+*.sqlite
+*.sqlite3
+portfolio.db
+
+# Environment variables (CRITICAL - NEVER COMMIT!)
+.env
+.env.local
+.env.production
+.env.development
+
+# Logs
+*.log
+logs/
+
+# macOS
+.DS_Store
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Keep uv.lock but ignore Python cache
+*.pyc
