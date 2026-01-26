@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Calendar, User, Tag } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Calendar, User, Tag, ArrowRight } from 'lucide-react';
 import { blogAPI } from '../utils/api';
 
 const Blog = () => {
@@ -75,7 +76,11 @@ const Blog = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {blogs.map((blog) => (
-              <article key={blog.id} className="card group cursor-pointer hover:shadow-xl">
+              <Link
+                key={blog.id}
+                to={`/blog/${blog.id}`}
+                className="card group cursor-pointer hover:shadow-xl transition-all duration-200"
+              >
                 {/* Blog Title */}
                 <h2 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors">
                   {blog.title}
@@ -101,7 +106,7 @@ const Blog = () => {
                 {/* Tags */}
                 {blog.tags && (
                   <div className="flex flex-wrap gap-2 mb-4">
-                    {blog.tags.split(',').map((tag, index) => (
+                    {blog.tags.split(',').slice(0, 3).map((tag, index) => (
                       <span
                         key={index}
                         className="flex items-center px-2 py-1 bg-primary-50 text-primary-700 text-xs rounded"
@@ -114,13 +119,11 @@ const Blog = () => {
                 )}
 
                 {/* Read More Link */}
-                <a
-                  href={`/blog/${blog.id}`}
-                  className="text-primary-600 hover:text-primary-700 font-medium text-sm inline-flex items-center"
-                >
-                  Read more →
-                </a>
-              </article>
+                <div className="flex items-center text-primary-600 group-hover:text-primary-700 font-medium text-sm">
+                  Read more
+                  <ArrowRight className="w-4 h-4 ml-1 group-hover:ml-2 transition-all" />
+                </div>
+              </Link>
             ))}
           </div>
         )}

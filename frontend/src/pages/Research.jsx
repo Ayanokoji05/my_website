@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { ExternalLink } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ExternalLink, ArrowRight } from 'lucide-react';
 import { researchAPI } from '../utils/api';
 
 const Research = () => {
@@ -22,6 +23,11 @@ const Research = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const truncateText = (text, maxLength = 150) => {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength).trim() + '...';
   };
 
   if (loading) {
@@ -68,7 +74,7 @@ const Research = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((project) => (
-              <div key={project.id} className="card group">
+              <div key={project.id} className="card group flex flex-col h-full">
                 {/* Project Image */}
                 {project.image_url && (
                   <div className="mb-4 overflow-hidden rounded-lg">
@@ -81,7 +87,7 @@ const Research = () => {
                 )}
 
                 {/* Project Status Badge */}
-                <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mb-3 ${
+                <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mb-3 self-start ${
                   project.status === 'Completed' ? 'bg-green-100 text-green-800' :
                   project.status === 'Ongoing' ? 'bg-blue-100 text-blue-800' :
                   'bg-yellow-100 text-yellow-800'
@@ -94,15 +100,15 @@ const Research = () => {
                   {project.title}
                 </h3>
 
-                {/* Project Description */}
-                <p className="text-gray-600 mb-4 line-clamp-3">
-                  {project.description}
+                {/* Project Description - Truncated */}
+                <p className="text-gray-600 mb-4 flex-grow">
+                  {truncateText(project.description, 150)}
                 </p>
 
                 {/* Technologies */}
                 {project.technologies && (
                   <div className="mb-4 flex flex-wrap gap-2">
-                    {project.technologies.split(',').map((tech, index) => (
+                    {project.technologies.split(',').slice(0, 3).map((tech, index) => (
                       <span
                         key={index}
                         className="px-2 py-1 bg-primary-50 text-primary-700 text-xs rounded"
@@ -110,6 +116,11 @@ const Research = () => {
                         {tech.trim()}
                       </span>
                     ))}
+                    {project.technologies.split(',').length > 3 && (
+                      <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">
+                        +{project.technologies.split(',').length - 3} more
+                      </span>
+                    )}
                   </div>
                 )}
 
@@ -120,18 +131,28 @@ const Research = () => {
                   </p>
                 )}
 
-                {/* Links */}
-                {project.project_url && (
-                  <a
-                    href={project.project_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center text-primary-600 hover:text-primary-700 font-medium text-sm"
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-3 mt-auto">
+                  <Link
+                    to={`/research/${project.id}`}
+                    className="flex items-center justify-center text-primary-600 hover:text-primary-700 font-medium text-sm border border-primary-600 hover:border-primary-700 rounded-lg px-4 py-2 transition-colors"
                   >
-                    <ExternalLink className="w-4 h-4 mr-1" />
-                    View Project
-                  </a>
-                )}
+                    Read More
+                    <ArrowRight className="w-4 h-4 ml-1" />
+                  </Link>
+                  
+                  {project.project_url && (
+                    <a
+                      href={project.project_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center text-gray-600 hover:text-gray-800 font-medium text-sm border border-gray-300 hover:border-gray-400 rounded-lg px-4 py-2 transition-colors"
+                    >
+                      <ExternalLink className="w-4 h-4 mr-1" />
+                      View Project
+                    </a>
+                  )}
+                </div>
               </div>
             ))}
           </div>
