@@ -14,7 +14,7 @@ const About = () => {
       institution: 'NISER, Bhubaneswar',
       year: '2023 - present',
       scholarship: 'DISHA Fellowship',
-      description: 'Coursework: Molecular Biology, Genetics, Biochemistry, Animal Physiology, Microbiology, Plant Physiology, Cell Biology, Ecology, Evolutionary Biology',
+      description: 'Coursework: Molecular Biology, Genetics, Immunology, Biochemistry, Animal Physiology, Microbiology, Plant Physiology, Cell Biology, Ecology, Evolutionary Biology',
     },
     {
       degree: 'Senior Secondary Schooling',
