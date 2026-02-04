@@ -4,7 +4,7 @@ const About = () => {
   const skills = [
     { category: 'Programming', items: ['Python', 'R', 'SQL'] },
     { category: 'Data Analysis', items: ['Pandas', 'NumPy', 'Matplotlib'] },
-    { category: 'Bioinformatics', items: ['BioPython', 'Genomics', 'RNA-Seq', 'BLAST'] },
+    { category: 'Bioinformatics', items: ['BioPython', 'Genomics', 'RNA-Seq', 'BLAST', 'MD Simulations (learning)'] },
     { category: 'Tools', items: ['Git', 'Linux', 'Jupyter', 'Nextflow (learning)'] },
   ];
 
