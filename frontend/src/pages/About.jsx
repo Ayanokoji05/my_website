@@ -5,7 +5,7 @@ const About = () => {
     { category: 'Programming', items: ['Python', 'R', 'SQL'] },
     { category: 'Data Analysis', items: ['Pandas', 'NumPy', 'Matplotlib'] },
     { category: 'Bioinformatics', items: ['BioPython', 'Genomics', 'RNA-Seq', 'BLAST'] },
-    { category: 'Tools', items: ['Git', 'Linux', 'Jupyter', 'Nextflow'] },
+    { category: 'Tools', items: ['Git', 'Linux', 'Jupyter', 'Nextflow (learning)'] },
   ];
 
   const education = [
