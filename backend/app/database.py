@@ -10,6 +10,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import QueuePool
 import os
 from dotenv import load_dotenv
+from sqlalchemy import text
 
 # Load environment variables from .env file
 load_dotenv()
@@ -94,21 +95,11 @@ def get_db():
 def test_connection():
     """
     Test if database connection is working.
-    
-    Returns:
-        bool: True if connection successful, False otherwise
-    
-    Usage:
-        from database import test_connection
-        
-        if test_connection():
-            print("Database is ready!")
-        else:
-            print("Database connection failed!")
+    Returns True if successful, False otherwise.
     """
     try:
         db = SessionLocal()
-        db.execute("SELECT 1")
+        db.execute(text("SELECT 1"))  # Use text() wrapper
         db.close()
         print("✅ Database connection test successful")
         return True

@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 from datetime import datetime
 import os
 from dotenv import load_dotenv
+from sqlalchemy import text  # Add this import at the top
 
 # Import local modules
 from .database import engine, Base, get_db, test_connection
@@ -123,20 +124,10 @@ def read_root():
 
 @app.get("/api/health", tags=["Status"])
 async def health_check(db: Session = Depends(get_db)):
-    """
-    Health check endpoint with database connectivity test
-    
-    Returns:
-        - status: "healthy" or "unhealthy"
-        - database: Database connection status
-        - timestamp: Current server time
-        - environment: Current environment (development/production)
-    """
     try:
-        # Test database connection
-        db.execute("SELECT 1")
+        # Use text() wrapper for the SQL query
+        db.execute(text("SELECT 1"))
         
-        # Get database type
         database_url = os.getenv("DATABASE_URL", "sqlite:///./portfolio.db")
         db_type = "PostgreSQL" if "postgresql" in database_url else "SQLite"
         
@@ -158,8 +149,7 @@ async def health_check(db: Session = Depends(get_db)):
                 "connected": False,
                 "error": str(e)
             },
-            "timestamp": datetime.now().isoformat(),
-            "environment": os.getenv("ENVIRONMENT", "development")
+            "timestamp": datetime.now().isoformat()
         }
 
 
