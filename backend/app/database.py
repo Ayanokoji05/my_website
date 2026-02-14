@@ -26,8 +26,11 @@ DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./portfolio.db")
 # This conversion is necessary for PostgreSQL connections to work on Render
 if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+# Print AFTER conversion, check the final URL
+if "postgresql" in DATABASE_URL or "postgres" in DATABASE_URL:
     print("✅ Using PostgreSQL (production)")
-else:
+elif "sqlite" in DATABASE_URL:
     print("⚠️  Using SQLite (local development)")
 
 # ============================================================================
