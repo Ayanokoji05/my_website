@@ -80,3 +80,4 @@ urllib3==2.6.3
 uvicorn==0.40.0
     # via backend (pyproject.toml)
 resend==2.19.0
+psycopg2-binary==2.9.9
