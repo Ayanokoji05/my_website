@@ -1,72 +1,245 @@
 """
-Main FastAPI application for Academic Portfolio Backend
+Academic Portfolio API - Main Application
+FastAPI backend with PostgreSQL database support
 """
 
-from fastapi import FastAPI, Depends, HTTPException, Request
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from sqlalchemy.orm import Session
 from datetime import datetime
-import logging
-from typing import List
+import os
+from dotenv import load_dotenv
 
 # Import local modules
-import models
-import schemas
-import database
+from .database import engine, Base, get_db, test_connection
+from .routers import blogs, contact, research, papers, auth
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
+# Load environment variables
+load_dotenv()
+
+# Create database tables
+Base.metadata.create_all(bind=engine)
 
 # Initialize FastAPI app
 app = FastAPI(
     title="Academic Portfolio API",
-    description="Backend API for academic portfolio website",
-    version="1.0.0"
+    description="Backend API for Academic Portfolio Website",
+    version="1.0.0",
+    docs_url="/docs" if os.getenv("ENVIRONMENT") != "production" else None,
+    redoc_url="/redoc" if os.getenv("ENVIRONMENT") != "production" else None,
 )
 
+# ============================================================================
+# MIDDLEWARE CONFIGURATION
+# ============================================================================
+
+# Security: Trusted Host Middleware (only in production)
+if os.getenv("ENVIRONMENT") == "production":
+    allowed_hosts = os.getenv("ALLOWED_HOSTS", "https://academic-portfolio-api.onrender.com").split(",")
+    app.add_middleware(
+        TrustedHostMiddleware,
+        allowed_hosts=[host.strip() for host in allowed_hosts]
+    )
+
 # CORS Configuration
-# Add all your frontend URLs here
-ALLOWED_ORIGINS = [
-    "http://localhost:3000",              # Local React development
-    "http://localhost:5173",              # Local Vite development
-    "https://academic-portfolio-lyart.vercel.app",  # Your Vercel deployment
-    # Add your custom domain here when you set it up
-    # "https://yourname.com",
-]
+allowed_origins_str = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000")
+origins = [origin.strip() for origin in allowed_origins_str.split(",")]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods (GET, POST, PUT, DELETE, etc.)
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["*"],
+    max_age=3600,
 )
 
 
-# Event handlers
+# Security Headers Middleware
+@app.middleware("http")
+async def add_security_headers(request, call_next):
+    """Add security headers to all responses"""
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    return response
+
+
+# Request logging middleware
+@app.middleware("http")
+async def log_requests(request, call_next):
+    """Log all incoming requests with timing"""
+    start_time = datetime.now()
+    
+    # Process the request
+    response = await call_next(request)
+    
+    # Calculate duration
+    duration = (datetime.now() - start_time).total_seconds()
+    
+    # Log the request
+    print(
+        f"[{datetime.now().strftime('%H:%M:%S')}] "
+        f"{request.method} {request.url.path} "
+        f"→ {response.status_code} "
+        f"({duration:.3f}s)"
+    )
+    
+    return response
+
+
+# ============================================================================
+# ROUTERS
+# ============================================================================
+
+# Include all routers
+app.include_router(auth.router)
+app.include_router(blogs.router)
+app.include_router(contact.router)
+app.include_router(research.router)
+app.include_router(papers.router)
+
+
+# ============================================================================
+# ROOT ENDPOINTS
+# ============================================================================
+
+@app.get("/", tags=["Status"])
+def read_root():
+    """
+    Root endpoint - API status and information
+    """
+    return {
+        "message": "Academic Portfolio API",
+        "status": "running",
+        "version": "1.0.0",
+        "docs": "/docs" if os.getenv("ENVIRONMENT") != "production" else "disabled in production",
+        "environment": os.getenv("ENVIRONMENT", "development")
+    }
+
+
+@app.get("/api/health", tags=["Status"])
+async def health_check(db: Session = Depends(get_db)):
+    """
+    Health check endpoint with database connectivity test
+    
+    Returns:
+        - status: "healthy" or "unhealthy"
+        - database: Database connection status
+        - timestamp: Current server time
+        - environment: Current environment (development/production)
+    """
+    try:
+        # Test database connection
+        db.execute("SELECT 1")
+        
+        # Get database type
+        database_url = os.getenv("DATABASE_URL", "sqlite:///./portfolio.db")
+        db_type = "PostgreSQL" if "postgresql" in database_url else "SQLite"
+        
+        return {
+            "status": "healthy",
+            "database": {
+                "connected": True,
+                "type": db_type
+            },
+            "timestamp": datetime.now().isoformat(),
+            "environment": os.getenv("ENVIRONMENT", "development"),
+            "version": "1.0.0"
+        }
+    except Exception as e:
+        print(f"❌ Health check failed: {e}")
+        return {
+            "status": "unhealthy",
+            "database": {
+                "connected": False,
+                "error": str(e)
+            },
+            "timestamp": datetime.now().isoformat(),
+            "environment": os.getenv("ENVIRONMENT", "development")
+        }
+
+
+@app.get("/api/status", tags=["Status"])
+def api_status():
+    """
+    Detailed API status information
+    """
+    database_url = os.getenv("DATABASE_URL", "sqlite:///./portfolio.db")
+    db_type = "PostgreSQL" if "postgresql" in database_url else "SQLite"
+    
+    return {
+        "api": {
+            "name": "Academic Portfolio API",
+            "version": "1.0.0",
+            "status": "operational"
+        },
+        "database": {
+            "type": db_type,
+            "status": "connected"
+        },
+        "environment": os.getenv("ENVIRONMENT", "development"),
+        "cors_origins": origins,
+        "timestamp": datetime.now().isoformat()
+    }
+
+
+# ============================================================================
+# LIFECYCLE EVENTS
+# ============================================================================
+
 @app.on_event("startup")
 async def startup_event():
     """
     Run on application startup
+    - Test database connection
+    - Verify tables are created
+    - Display configuration info
     """
-    logger.info("🚀 Starting Academic Portfolio API...")
+    print("=" * 60)
+    print("🚀 Academic Portfolio API is starting...")
+    print("=" * 60)
+    
+    # Environment info
+    environment = os.getenv("ENVIRONMENT", "development")
+    print(f"🌍 Environment: {environment}")
+    
+    # Database info
+    database_url = os.getenv("DATABASE_URL")
+    if database_url:
+        if "postgresql" in database_url:
+            print("🗄️  Database: PostgreSQL (production)")
+            # Mask the password in the URL for security
+            safe_url = database_url.split("@")[1] if "@" in database_url else "***"
+            print(f"📍 Database host: {safe_url}")
+        else:
+            print("🗄️  Database: SQLite (local development)")
+    else:
+        print("⚠️  Database: SQLite (local development - no DATABASE_URL set)")
     
     # Test database connection
-    if database.test_connection():
-        logger.info("✅ Database connection verified")
+    print("🔌 Testing database connection...")
+    if test_connection():
+        print("✅ Database connection verified")
     else:
-        logger.error("❌ Database connection failed - app may not work correctly")
+        print("❌ Database connection failed - check configuration")
     
-    # Create database tables if they don't exist
-    try:
-        models.Base.metadata.create_all(bind=database.engine)
-        logger.info("✅ Database tables initialized")
-    except Exception as e:
-        logger.error(f"❌ Failed to initialize database tables: {e}")
+    # CORS origins
+    print(f"📍 Allowed CORS origins: {origins}")
+    
+    # Tables
+    print("✅ Database tables created/verified")
+    
+    # API endpoints
+    print(f"📚 API Documentation: /docs")
+    print(f"💚 Health Check: /api/health")
+    
+    print("=" * 60)
+    print("✨ Academic Portfolio API is ready!")
+    print("=" * 60)
 
 
 @app.on_event("shutdown")
@@ -74,264 +247,51 @@ async def shutdown_event():
     """
     Run on application shutdown
     """
-    logger.info("👋 Shutting down Academic Portfolio API...")
-
-
-# Middleware to log all requests
-@app.middleware("http")
-async def log_requests(request: Request, call_next):
-    """
-    Log all incoming requests and their processing time
-    """
-    start_time = datetime.now()
-    
-    response = await call_next(request)
-    
-    duration = (datetime.now() - start_time).total_seconds()
-    
-    logger.info(
-        f"{request.method} {request.url.path} "
-        f"status={response.status_code} duration={duration:.3f}s"
-    )
-    
-    return response
+    print("=" * 60)
+    print("👋 Academic Portfolio API is shutting down...")
+    print("=" * 60)
 
 
 # ============================================================================
-# HEALTH & STATUS ENDPOINTS
+# ERROR HANDLERS
 # ============================================================================
 
-@app.get("/", tags=["Status"])
-def read_root():
-    """
-    Root endpoint - API status
-    """
+@app.exception_handler(404)
+async def not_found_handler(request, exc):
+    """Custom 404 handler"""
     return {
-        "message": "Academic Portfolio API",
-        "status": "running",
-        "version": "1.0.0",
-        "docs": "/docs"
+        "error": "Not Found",
+        "message": f"The endpoint {request.url.path} does not exist",
+        "status_code": 404
     }
 
 
-@app.get("/health", tags=["Status"])
-async def health_check(db: Session = Depends(database.get_db)):
-    """
-    Health check endpoint - verifies API and database are working
-    """
-    try:
-        # Test database connection
-        db.execute("SELECT 1")
-        
-        return {
-            "status": "healthy",
-            "timestamp": datetime.now().isoformat(),
-            "database": "connected"
-        }
-    except Exception as e:
-        logger.error(f"Health check failed: {e}")
-        raise HTTPException(
-            status_code=503,
-            detail={
-                "status": "unhealthy",
-                "timestamp": datetime.now().isoformat(),
-                "error": str(e)
-            }
-        )
+@app.exception_handler(500)
+async def internal_error_handler(request, exc):
+    """Custom 500 handler"""
+    print(f"❌ Internal Server Error: {exc}")
+    return {
+        "error": "Internal Server Error",
+        "message": "An unexpected error occurred",
+        "status_code": 500
+    }
 
 
 # ============================================================================
-# BLOG ENDPOINTS
+# MAIN ENTRY POINT (for local development)
 # ============================================================================
-
-@app.get("/api/blogs", response_model=List[schemas.Blog], tags=["Blogs"])
-def get_blogs(
-    skip: int = 0,
-    limit: int = 100,
-    db: Session = Depends(database.get_db)
-):
-    """
-    Get all blog posts
-    
-    - **skip**: Number of posts to skip (for pagination)
-    - **limit**: Maximum number of posts to return
-    """
-    blogs = db.query(models.Blog).offset(skip).limit(limit).all()
-    return blogs
-
-
-@app.get("/api/blogs/{blog_id}", response_model=schemas.Blog, tags=["Blogs"])
-def get_blog(blog_id: int, db: Session = Depends(database.get_db)):
-    """
-    Get a specific blog post by ID
-    """
-    blog = db.query(models.Blog).filter(models.Blog.id == blog_id).first()
-    if blog is None:
-        raise HTTPException(status_code=404, detail="Blog post not found")
-    return blog
-
-
-@app.post("/api/blogs", response_model=schemas.Blog, tags=["Blogs"])
-def create_blog(
-    blog: schemas.BlogCreate,
-    db: Session = Depends(database.get_db)
-):
-    """
-    Create a new blog post
-    """
-    db_blog = models.Blog(**blog.dict())
-    db.add(db_blog)
-    db.commit()
-    db.refresh(db_blog)
-    
-    logger.info(f"Created new blog post: {db_blog.title} (ID: {db_blog.id})")
-    return db_blog
-
-
-@app.put("/api/blogs/{blog_id}", response_model=schemas.Blog, tags=["Blogs"])
-def update_blog(
-    blog_id: int,
-    blog: schemas.BlogCreate,
-    db: Session = Depends(database.get_db)
-):
-    """
-    Update an existing blog post
-    """
-    db_blog = db.query(models.Blog).filter(models.Blog.id == blog_id).first()
-    if db_blog is None:
-        raise HTTPException(status_code=404, detail="Blog post not found")
-    
-    for key, value in blog.dict().items():
-        setattr(db_blog, key, value)
-    
-    db.commit()
-    db.refresh(db_blog)
-    
-    logger.info(f"Updated blog post: {db_blog.title} (ID: {db_blog.id})")
-    return db_blog
-
-
-@app.delete("/api/blogs/{blog_id}", tags=["Blogs"])
-def delete_blog(blog_id: int, db: Session = Depends(database.get_db)):
-    """
-    Delete a blog post
-    """
-    db_blog = db.query(models.Blog).filter(models.Blog.id == blog_id).first()
-    if db_blog is None:
-        raise HTTPException(status_code=404, detail="Blog post not found")
-    
-    db.delete(db_blog)
-    db.commit()
-    
-    logger.info(f"Deleted blog post ID: {blog_id}")
-    return {"message": "Blog post deleted successfully"}
-
-
-# ============================================================================
-# RESEARCH/PROJECTS ENDPOINTS
-# ============================================================================
-
-@app.get("/api/research", response_model=List[schemas.Research], tags=["Research"])
-def get_research(
-    skip: int = 0,
-    limit: int = 100,
-    db: Session = Depends(database.get_db)
-):
-    """
-    Get all research projects
-    """
-    research = db.query(models.Research).offset(skip).limit(limit).all()
-    return research
-
-
-@app.post("/api/research", response_model=schemas.Research, tags=["Research"])
-def create_research(
-    research: schemas.ResearchCreate,
-    db: Session = Depends(database.get_db)
-):
-    """
-    Create a new research project
-    """
-    db_research = models.Research(**research.dict())
-    db.add(db_research)
-    db.commit()
-    db.refresh(db_research)
-    
-    logger.info(f"Created new research project: {db_research.title}")
-    return db_research
-
-
-# ============================================================================
-# CONTACT FORM ENDPOINTS
-# ============================================================================
-
-@app.get("/api/contacts", response_model=List[schemas.Contact], tags=["Contact"])
-def get_contacts(
-    skip: int = 0,
-    limit: int = 100,
-    db: Session = Depends(database.get_db)
-):
-    """
-    Get all contact form submissions
-    """
-    contacts = db.query(models.Contact).offset(skip).limit(limit).all()
-    return contacts
-
-
-@app.post("/api/contacts", response_model=schemas.Contact, tags=["Contact"])
-def create_contact(
-    contact: schemas.ContactCreate,
-    db: Session = Depends(database.get_db)
-):
-    """
-    Submit a contact form message
-    """
-    db_contact = models.Contact(**contact.dict())
-    db.add(db_contact)
-    db.commit()
-    db.refresh(db_contact)
-    
-    logger.info(f"New contact message from: {db_contact.email}")
-    
-    # TODO: Send email notification here
-    
-    return db_contact
-
-
-# ============================================================================
-# PUBLICATIONS ENDPOINTS (if you want to store them in DB)
-# ============================================================================
-
-@app.get("/api/publications", response_model=List[schemas.Publication], tags=["Publications"])
-def get_publications(
-    skip: int = 0,
-    limit: int = 100,
-    db: Session = Depends(database.get_db)
-):
-    """
-    Get all publications
-    """
-    publications = db.query(models.Publication).offset(skip).limit(limit).all()
-    return publications
-
-
-@app.post("/api/publications", response_model=schemas.Publication, tags=["Publications"])
-def create_publication(
-    publication: schemas.PublicationCreate,
-    db: Session = Depends(database.get_db)
-):
-    """
-    Add a new publication
-    """
-    db_publication = models.Publication(**publication.dict())
-    db.add(db_publication)
-    db.commit()
-    db.refresh(db_publication)
-    
-    logger.info(f"Added new publication: {db_publication.title}")
-    return db_publication
-
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    
+    print("Starting Academic Portfolio API in development mode...")
+    print("Access at: http://localhost:8000")
+    print("API Docs at: http://localhost:8000/docs")
+    
+    uvicorn.run(
+        "main:app",
+        host="0.0.0.0",
+        port=8000,
+        reload=True,
+        log_level="info"
+    )
