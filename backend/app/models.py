@@ -7,14 +7,14 @@ class BlogPost(Base):
     __tablename__ = "blog_posts"
     
     id = Column(Integer, primary_key=True, index=True)
-    title = Column(String(200), nullable=False)
+    title = Column(String(500), nullable=False)
     content = Column(Text, nullable=False)
-    excerpt = Column(String(500))  # Short preview
-    author = Column(String(100), default="Your Name")
+    excerpt = Column(String(900))  # Short preview
+    author = Column(String(500), default="Your Name")
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     published = Column(Boolean, default=True)
-    tags = Column(String(200))  # Comma-separated tags
+    tags = Column(String(500))  # Comma-separated tags
     
     def __repr__(self):
         return f"<BlogPost {self.title}>"
