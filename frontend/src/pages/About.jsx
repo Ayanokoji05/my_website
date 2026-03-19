@@ -41,13 +41,13 @@ const About = () => {
       description: 'Awarded prestigious fellowship for academic excellence in Life Sciences.',
     },
     {
-      title: 'GATE XL',
+      title: 'GATE XL (Life Sciences)',
       organization: 'IIT Guwahati',
       year: '2026',
       description: 'AIR 208',
     },
     {
-      title: 'GATE BT',
+      title: 'GATE BT (Biotechnology)',
       organization: 'IIT Guwahati',
       year: '2026',
       description: 'AIR 540',
