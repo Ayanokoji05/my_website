@@ -89,7 +89,7 @@ const About = () => {
 
             {/* CV Download Button */}
             <div className="mt-8">
-              
+              <a
                 href="/assets/pratush_cv-2.pdf"
                 download
                 className="btn-primary inline-flex items-center"
