@@ -41,16 +41,16 @@ const About = () => {
       description: 'Awarded prestigious fellowship for academic excellence in Life Sciences.',
     },
     {
-      title: 'Research Publication',
-      organization: 'Conference/Journal',
-      year: '2024',
-      description: 'Published research on computational biology and bioinformatics pipelines.',
+      title: 'GATE XL',
+      organization: 'IIT Guwahati',
+      year: '2026',
+      description: 'AIR 208',
     },
     {
-      title: 'Hackathon Winner',
-      organization: 'University Event',
-      year: '2024',
-      description: 'First place in bioinformatics hackathon for innovative data analysis solution.',
+      title: 'GATE BT',
+      organization: 'IIT Guwahati',
+      year: '2026',
+      description: 'AIR 540',
     },
   ];
 
