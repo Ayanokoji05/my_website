@@ -102,6 +102,26 @@ const About = () => {
         </div>
       </section>
 
+      {/* Achievements */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center mb-8">
+            <Trophy className="w-8 h-8 text-primary-600 mr-3" />
+            <h2 className="text-3xl font-bold text-gray-900">Achievements</h2>
+          </div>
+          <div className="space-y-6">
+            {achievements.map((achievement, index) => (
+              <div key={index} className="card">
+                <h3 className="text-xl font-bold text-gray-900 mb-2">{achievement.title}</h3>
+                <p className="text-primary-600 font-semibold mb-2">{achievement.organization}</p>
+                <p className="text-gray-500 text-sm mb-3">{achievement.year}</p>
+                <p className="text-gray-600">{achievement.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      
       {/* Education */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -136,26 +156,6 @@ const About = () => {
                 <p className="text-primary-600 font-semibold mb-2">{exp.organization}</p>
                 <p className="text-gray-500 text-sm mb-3">{exp.period}</p>
                 <p className="text-gray-600">{exp.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Achievements */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center mb-8">
-            <Trophy className="w-8 h-8 text-primary-600 mr-3" />
-            <h2 className="text-3xl font-bold text-gray-900">Achievements</h2>
-          </div>
-          <div className="space-y-6">
-            {achievements.map((achievement, index) => (
-              <div key={index} className="card">
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{achievement.title}</h3>
-                <p className="text-primary-600 font-semibold mb-2">{achievement.organization}</p>
-                <p className="text-gray-500 text-sm mb-3">{achievement.year}</p>
-                <p className="text-gray-600">{achievement.description}</p>
               </div>
             ))}
           </div>
