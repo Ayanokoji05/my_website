@@ -121,6 +121,15 @@ def read_root():
         "environment": os.getenv("ENVIRONMENT", "development")
     }
 
+# ✅ ADD THIS - Lightweight health check (NO database)
+@app.get("/health", tags=["Status"])
+def health():
+    """
+    Lightweight health check for uptime monitoring
+    No database dependency - responds instantly even on cold start
+    """
+    return {"status": "ok", "timestamp": datetime.now().isoformat()}
+    
 
 @app.get("/api/health", tags=["Status"])
 async def health_check(db: Session = Depends(get_db)):
