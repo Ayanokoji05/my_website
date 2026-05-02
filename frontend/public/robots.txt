@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://academic-portfolio-lyart.vercel.app/sitemap.xml
+Sitemap: https://pratushkumarpusti.vercel.app/sitemap.xml
